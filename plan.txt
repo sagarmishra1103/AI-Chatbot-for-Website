@@ -1,0 +1,175 @@
+PROJECT: Website QA Chatbot (Gemini + Streamlit)
+
+--------------------------------------------------
+OBJECTIVE
+--------------------------------------------------
+Build a chatbot that:
+- Extracts content from a given website URL
+- Processes and understands the content
+- Answers user queries based strictly on that content
+- Maintains limited conversational memory
+- Avoids redundant scraping using caching
+- Provides logs/debug insights
+
+Target Use Case:
+- Conference / informational websites (e.g., IAPSCON 2027)
+
+--------------------------------------------------
+SYSTEM ARCHITECTURE
+--------------------------------------------------
+User Input (URL + Question)
+        ↓
+URL Scraper (clean structured extraction)
+        ↓
+Context Builder (cleaning + chunking)
+        ↓
+Retriever (select relevant chunks)
+        ↓
+Prompt Engine (inject context + chat history)
+        ↓
+Gemini API (response generation)
+        ↓
+Streamlit UI (display + interaction)
+
+--------------------------------------------------
+MODULES
+--------------------------------------------------
+
+1. url_mode_web_scrap.py
+   - Fetch HTML
+   - Remove unwanted tags (script, nav, footer, etc.)
+   - Extract:
+        • headings (h1–h3)
+        • paragraphs
+        • list items
+
+2. context_builder.py
+   - Clean text
+   - Sentence-based chunking
+   - Chunk size: ~700 words
+   - Overlap: ~100 words
+
+3. retriever.py
+   - Preprocess query and chunks
+   - Keyword-based scoring
+   - Select top K chunks (default: 3)
+
+4. prompt_engine.py
+   - Inject:
+        • relevant chunks
+        • recent chat history (last 4 turns)
+   - Enforce strict answering rules
+
+5. gemini_client.py
+   - Handle Gemini API calls
+   - Model: gemini-1.5-flash
+
+6. logger.py
+   - Track:
+        • scraping
+        • chunk creation
+        • query processing
+        • response time
+
+7. app.py (Streamlit)
+   - UI + orchestration
+   - Session state management
+   - Caching system
+   - Chat interface
+
+--------------------------------------------------
+CORE FEATURES
+--------------------------------------------------
+
+1. URL Processing
+   - User inputs URL
+   - Click "Process URL"
+   - System scrapes + builds chunks
+
+2. Caching
+   - If URL already processed → reuse chunks
+   - Avoid re-scraping
+
+3. Chat System
+   - User asks question
+   - System retrieves relevant chunks
+   - Gemini generates answer
+
+4. Conversational Memory
+   - Stores chat history
+   - Uses last 4 exchanges in prompt
+
+5. Logging / Debug Panel
+   - Shows:
+        • chunk count
+        • cache status
+        • response time
+        • recent logs
+
+--------------------------------------------------
+SESSION STATE STRUCTURE
+--------------------------------------------------
+
+session_state = {
+    cache: { url: chunks },
+    chunks: [],
+    chat_history: [(User, text), (AI, text)],
+    logs: []
+}
+
+--------------------------------------------------
+RULES / CONSTRAINTS
+--------------------------------------------------
+
+- Do NOT send full webpage to Gemini
+- Always use retrieved chunks only
+- Limit chat history (avoid token overflow)
+- Keep modules independent (no Streamlit inside logic)
+- Handle errors (invalid URL, empty content)
+
+--------------------------------------------------
+CURRENT STATUS (V1)
+--------------------------------------------------
+
+✔ Scraper implemented
+✔ Chunking engine implemented
+✔ Retrieval system implemented
+✔ Prompt engine implemented
+✔ Gemini integration done
+✔ Streamlit UI done
+✔ Caching implemented
+✔ Logging implemented
+
+--------------------------------------------------
+FUTURE IMPROVEMENTS (V2 / V3)
+--------------------------------------------------
+
+V2:
+- TF-IDF / embedding-based retrieval
+- Multi-URL support
+- Better UI (chat bubbles, streaming)
+
+V3:
+- Flask backend API
+- Full website integration
+- Authentication system
+- Database integration
+- Vector DB (Pinecone / FAISS)
+
+--------------------------------------------------
+RUN INSTRUCTIONS
+--------------------------------------------------
+
+1. Create virtual environment
+2. Install requirements:
+   pip install -r requirements.txt
+
+3. Add .env file:
+   GEMINI_API_KEY=your_key
+
+4. Run:
+   streamlit run app.py
+
+--------------------------------------------------
+END
+--------------------------------------------------
