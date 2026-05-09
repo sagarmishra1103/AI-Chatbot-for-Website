@@ -74,6 +74,5 @@ streamlit run app.py
   - python-dotenv
   
 ---
-Author: Shivsagar Mishra <br>
-Organization: Megthink Solutions Pvt. Ltd. 
+Author: Shivsagar Mishra 
 
