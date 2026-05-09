@@ -34,12 +34,13 @@ Chatbot/
 ├── .env                         # Configuration for API keys
 └── requirements.txt             # Project dependencies
 ```
-  🛠️ Installation & Setup1. Clone the Repository
+  🛠️ Installation & Setup
+  1. Clone the Repository
   ```Bash
 git clone [https://github.com/sagarmishra1103/AI-Chatbot-for-Website.git](https://github.com/sagarmishra1103/AI-Chatbot-for-Website.git)
 cd AI-Chatbot-for-Website
   ```
-2. Set Up Virtual Environment <br>
+  2. Set Up Virtual Environment <br>
 
 For Windows (PowerShell):
 
